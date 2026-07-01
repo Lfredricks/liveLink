@@ -15,6 +15,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import pandas as pd
 import requests
 import streamlit as st
+from openpyxl.styles import PatternFill
 
 # ---------------------------------------------------------------------------
 # EDIT ME IF NEEDED:
@@ -225,26 +226,26 @@ if uploaded is not None:
         else:
             st.success("Every link is working. 🎉")
 
-        # Build downloadable Excel files in memory.
+        # Build one downloadable spreadsheet, with broken rows highlighted red.
         annotated_bytes = io.BytesIO()
         with pd.ExcelWriter(annotated_bytes, engine="openpyxl") as writer:
             annotated.to_excel(writer, index=False)
+            sheet = writer.sheets[list(writer.sheets)[0]]
+            red_fill = PatternFill(
+                start_color="FFC7CE", end_color="FFC7CE", fill_type="solid"
+            )
+            num_cols = len(annotated.columns)
+            # Row 1 is the header, so data starts at row 2.
+            for offset, is_broken in enumerate(broken_mask):
+                if is_broken:
+                    excel_row = offset + 2
+                    for col in range(1, num_cols + 1):
+                        sheet.cell(row=excel_row, column=col).fill = red_fill
         annotated_bytes.seek(0)
 
-        broken_bytes = io.BytesIO()
-        with pd.ExcelWriter(broken_bytes, engine="openpyxl") as writer:
-            broken.to_excel(writer, index=False)
-        broken_bytes.seek(0)
-
         st.download_button(
-            "⬇️ Download full results (annotated copy)",
+            "⬇️ Download results (broken links highlighted red)",
             data=annotated_bytes,
             file_name="link_check_results.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        )
-        st.download_button(
-            "⬇️ Download broken links only",
-            data=broken_bytes,
-            file_name="broken_links.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )

@@ -28,11 +28,10 @@ which ones are working and which are broken.
    - ✅ **Working** — the link opened fine
    - ❌ **Broken** — the link is dead, errored, or shows a "page not found"
    - ➖ **Skipped** — the cell was empty or wasn't actually a link
-5. **Download your results.** Click either button:
-   - **Download full results** — your original spreadsheet with two new columns,
-     `Status` and `Reason` (the reason explains *why* a link was marked broken).
-   - **Download broken links only** — a short list of just the failures, with the
-     row number so you can find each one in your original file.
+5. **Download your results.** Click **Download results** to get back a single
+   spreadsheet — your original file with two new columns, `Status` and `Reason`
+   (the reason explains *why* a link was marked broken). **Every broken row is
+   shaded red**, so the failures are easy to spot at a glance.
 
 That's it. You can close the page when you're done.
 

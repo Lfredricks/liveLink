@@ -11,4 +11,3 @@ venv/
 
 # Local result files (don't commit real data)
 link_check_results.xlsx
-broken_links.xlsx
